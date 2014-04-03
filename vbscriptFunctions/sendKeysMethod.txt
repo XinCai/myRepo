@@ -1,0 +1,20 @@
+'================================================
+'Sends one or more keystrokes to the active window 
+'  ------------------------------
+'   object.SendKeys(string)
+'  ------------------------------
+' Object: WshShell object
+' String: String value indicating the keystroke(s) you want to send.
+'
+' Reference: http://msdn.microsoft.com/en-us/library/8c6yea83(v=vs.84).aspx
+'
+' different combination can 
+'================================================
+Public Sub SendKeys(keyString)
+   	Dim WshShell3 
+    Set WshShell3 = CreateObject("WScript.Shell")	
+	WshShell3.SendKeys keyString
+	Set WshShell3 = Nothing
+End Sub
+
+Call SendKeys("+{HOME}")

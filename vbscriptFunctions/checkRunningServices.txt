@@ -1,0 +1,38 @@
+'==============================
+'list windows service
+'==============================
+
+Option Explicit
+Dim objWMIService
+Dim objItem
+Dim objService
+Dim strServiceList
+Dim colListOfServices
+Dim strComputer
+Dim strService
+
+'On Error Resume Next
+' ---------------------------------------------------------
+' Pure WMI commands
+' Windows Management Instrumentation (WMI) is one of the hidden treasures of Microsoft's operating systems.
+' WMI Script to List Services
+' 	1) As you get to know me, you will realize that I love variables. This script gave me a real challenge, I wanted to introduce strService so that I could change easily from the boring Alerter to the more useful Pop3Svc, here is the difficulty,
+' 	("Select * from Win32_Service Where Name =" & strService & " ").  I solved the problem by precise positioning of the two sets of speech marks, moreover, when I declared strService, it required the syntax " 'Alerter' " and not plain " Alerter ".  Those were trivial points but they can drive you mad if you don't work with VBScript every day.
+'	2) If you are going to adapt this for a production task, then you may need to remove either line 24 objService.StopService() or two lines further down, objService.StartService(). 
+' 	However, Efrain D. kindly wrote in and said that he wished to restart, in which case leave in both and possible increase sleep 15000 to 30000, each 1000 is represents a one second delay.
+'	3) I almost forgot, you also need to change strComputer ="." to strComputer = "Victim2 or whichever machine you wish to control.
+'	4) As this is a test script, I introduced a delay with WScript.Sleep, the values are in mille seconds so 15000 are just 15 seconds.
+'	5) Even though there is only one computer, the script still needs the loop: For Each....In... Next.  Believe me, I tried to simplify the script by removing the loop, but all I got was an object required error.
+' ---------------------------------------------------------
+strComputer = "." 	' this line means, local machine.
+Set objWMIService = GetObject("winmgmts:"&"{impersonationLevel=impersonate}!\\"& strComputer & "\root\cimv2")
+Set colListOfServices = objWMIService.ExecQuery("Select * from Win32_Service ")
+
+' WMI and VBScript loop
+For Each objService in colListOfServices
+	If UCase(Left(objService.name,1)) >"N" then
+		strServiceList = strServiceList & vbCr & objService.name
+	End if
+Next
+
+WScript.Echo strServiceList

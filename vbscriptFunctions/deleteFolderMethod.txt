@@ -1,0 +1,5 @@
+
+'Delete files in temp/testing folder
+Set obj = CreateObject("Scripting.FileSystemObject") 'Calls the File System Object
+obj.DeleteFolder("D:\temp\editor") ' Delete folder 
+obj.DeleteFile("D:\temp\editor\*.*") 'Deletes the file throught the DeleteFile function
