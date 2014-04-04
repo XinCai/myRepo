@@ -1,0 +1,182 @@
+'============================================================
+' Automation object model : Automation object model is nothing but collection of objects,methods 
+' and properties which are used to perform quicktest operations.Through out this object model we can perform any operation described in QTP interface. 
+' For every option in QTP menus(Interface) have Objects,methods and properties are there in this model.
+'
+'
+' start  load start up function
+'
+' finish clean up and write test result to text file  
+'============================================================
+Dim oLogFile
+
+Public Sub LoadStartUpScripts_updated( )
+	'-------------------------
+	'	Set Up Global Options
+	'-------------------------
+		' -----Test Environment Settings-----
+
+	    ' ------Get Test Case Name------------
+		g_TestCase = Environment.Value("TestName")
+
+		' ---------QC Connection-------------
+		Dim CurrentTSTest
+		g_Release = "Release1"       
+		g_AppCode = "WCMSJavaEditor"
+        g_envcode = "DevelopEnv"
+
+		' ---------Time Settings-------------
+		g_TestDate = Year(Now) & "-"  & Month(Now) & "-"  & Day(Now)
+		g_TestDateTime = Year(Now) & "-"  & Month(Now) & "-"  & Day(Now) & "-" & Hour(Now) & "-" & Minute(Now) & "-" & Second(Now)
+		g_WaitTimeS = 1
+		g_WaitTimeX = 3
+		g_WaitTimeXX = 10
+		g_WaitTimeXXX = 15
+		g_TimeStarted = Now()
+		g_TestDuration = 0
+		
+		Select Case g_Release
+			Case "Release1"
+				' Dev env : 
+                'g_AppURL = "application under test , URL goes here"			
+				'g_InfoURL = ""
+'				g_envcode = ""
+'				g_Username = ""
+'				g_Password = ""
+			Case "Release2"
+	'			g_AppURL = ""			
+				'g_AppURL = "application URL goes here"  			
+				'g_envcode = " environment code goes here"
+				'g_Username = "some user name goes here"
+				'g_Password = ""
+			Case "Release3"
+                'g_AppURL = " different release has different URL definiation"				
+		End Select
+	
+	'---------------------------------
+	'	Set Up Test Case Timer Object
+	'---------------------------------
+		Set TRTimer = MercuryTimers.Timer("TRTimer1")
+
+	'-------------------------
+	'	Set Up Test Folders
+	'-------------------------
+
+	'g_HomeDirectory = AutomationDirectory
+
+	TestResultsDir = "D:\_devl\QTPDemo\TestResults"
+    
+	Set objfso = CreateObject("Scripting.FileSystemObject")
+
+	If Not objfso.FolderExists(TestResultsDir) Then
+		objfso.CreateFolder(TestResultsDir)
+	End If
+
+	Set objfso = Nothing  'disassociate an object variable from any actual object.
+	
+	'-------------------------
+	'	Create Log File
+	'-------------------------
+	v_LogFileName = "D:\_devl\QTPDemo\TestResults\QTP.log"
+	'v_LogFileName = g_TestLogsDir & "\" & g_TestCase & "_" & g_TestDateTime & "_TestCase_" & g_RowID & ".log"
+	'v_LogFileName = g_TestLogsDir & "\" & g_TestCase & "_" & g_TestDateTime & "_TestCase_" & g_RowID & ".csv"
+
+	If ReportFileStatus(v_LogFileName) = "File Exist" then 
+		Set objfsoLogFile = CreateObject("Scripting.FileSystemObject")
+		Set oLogFile = objfsoLogFile.OpenTextFile(v_LogFileName, 8)
+	Else 
+		Set objfsoLogFile = CreateObject("Scripting.FileSystemObject")
+		Set oLogFile = Nothing
+		Set oLogFile = objfsoLogFile.CreateTextFile(v_LogFileName, True)
+	End if 
+	
+'	Set objfsoLogFile = CreateObject("Scripting.FileSystemObject")
+'    Set oLogFile = Nothing
+'	Set oLogFile = objfsoLogFile.CreateTextFile(v_LogFileName, True)
+
+	oLogFile.Write("QTP test case start,")
+    oLogFile.Write("Environment = "&"Staging,")
+	oLogFile.Write("Component = "&"Content creation,")
+'    oLogFile.WriteLine("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -")
+'    oLogFile.WriteLine("Test Date Time : " & g_TestDateTime)
+'    oLogFile.WriteLine("Test App : " & g_AppCode)
+'    oLogFile.WriteLine("Test Release : " & g_Release)
+'    oLogFile.WriteLine("Test Server : " & g_envcode)
+'    oLogFile.WriteLine("Test Browser : " & g_Browser)
+'    oLogFile.WriteLine("Caller Script : " & g_TestCase)
+'	oLogFile.WriteLine("Test Case : " & g_RowID)
+'    oLogFile.WriteLine("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -")
+'    oLogFile.WriteLine("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -")
+End Sub	
+
+'=========================================
+'
+' determine if file exist or not 
+'=========================================
+Function ReportFileStatus(filespec)
+   Dim fso
+   Dim msg
+   Set fso = CreateObject("Scripting.FileSystemObject")
+   If (fso.FileExists(filespec)) Then
+      msg = "File Exist"
+   Else
+      msg = "File Not Exist"
+   End If
+   Set fso = Nothing
+   ReportFileStatus = msg
+End Function
+
+'==================Fun_08==================
+'	Write to Log File
+'==========================================
+Public Sub SendToLog(v_Comment)
+	oLogFile.Write(Now()& " , " & v_Comment)
+End Sub
+
+'=======================Fun_14==========================
+'	Finish Test Case Run
+'=======================================================
+Public Sub LoadCleanUpScripts()
+
+	'Get test result
+	'-----------------
+		If Reporter.RunStatus = micFail Then
+			g_TestResult = "FAILED"
+		Else
+			g_TestResult = "PASSED"
+		End If
+		
+	'Get test duration
+	'-----------------
+	If g_PerformanceTest Then
+			g_TestDuration = TRTimer.ElapsedTime/1000	
+	End If
+
+	'-------------------------
+	'	Close Log file 
+	'-------------------------
+	oLogFile.Write("QTP test case end")
+    oLogFile.Close
+    Set oLogFile = Nothing                     'disassociate an object variable from any actual object.
+    Set objfsoLogFile = Nothing           'disassociate an object variable from any actual object.
+	ExitTest
+End Sub
+
+
+
+Call LoadStartUpScripts()
+Call SendToLog("Start up editor,")
+Call SendToLog("log on editor,")
+Call SendToLog("create an article,")
+Call SendToLog("save and publish,")
+Call LoadCleanUpScripts()
+
+
+
+
+
+
+
+
+
+
