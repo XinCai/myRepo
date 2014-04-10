@@ -1,0 +1,17 @@
+' VB Script Document
+' check QTP help file , search ObjectRepositoryUtil , it contains help information about Object Model
+' with ObjectRepositoryUtil , you can manipulate object repository files (share and local) from outside of Quick Test Professional 
+' it contains a list of methods
+option explicit
+Dim objORUtil, objCollection, objCol, i, objToCol
+Rem AOM to Open an OR file and  get the Object Properties
+Set objORUtil = CreateObject("Mercury.ObjectRepositoryUtil")
+objORUtil.Load "D:\_devl\BAU\test-automation-bau\AutomationFramework\Temp\BitMapVSPageCheck\Action1\ObjectRepository.bdb"
+Set objCollection = objORUtil.GetAllObjects
+For i = 0 to objCollection.Count-1
+  Set objToCol = objCollection.item(i)
+  MsgBox objORUtil.GetLogicalName(objToCol)
+Next
+Set objToCol = Nothing
+Set objCollection = Nothing
+Set objORUtil = Nothing

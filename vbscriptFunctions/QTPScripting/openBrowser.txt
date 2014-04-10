@@ -1,0 +1,10 @@
+Dim iURL 
+Dim objShell
+
+iURL = "www.google.com"
+'iURL = "www.baidu.com"
+
+set objShell = CreateObject("Shell.Application")
+'objShell.ShellExecute "chrome.exe", iURL, "", "", 1
+'objShell.ShellExecute "IExplore.exe", iURL, "", "", 1
+objShell.ShellExecute "Firefox.exe", iURL, "", "", 1

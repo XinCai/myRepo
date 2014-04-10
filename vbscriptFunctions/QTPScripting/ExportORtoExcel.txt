@@ -1,0 +1,184 @@
+'############################################  
+'Description  : Exporting Object Repository to Excel  
+'What Concepts used : Object Repository Model, Excel Object Model  
+'Required Parameters: Object Repository, Excel Path (Creates Excel File)  
+'Required Software : QTP/UFT Installed  
+'Developed By  : Sudhakar Kakunuri  
+'############################################  
+  
+'Declare Variables  
+'************************************  
+Dim srcRepository  
+Dim ParentObject  
+Dim excel, workbooks, rIndex, objRange  
+Dim ObjectRepositoryPath,orExcelPath  
+'************************************  
+  
+'Specify file Paths  
+'************************************  
+'OR must be created before executing this  
+'You can use .TSR, .XML and .BDB Object Repositories  
+'An excel file will be created automatically with the name excel.xls  
+ObjectRepositoryPath="D:\Automation\AutomationFramework\ObjectRepository\CreateNewResource.tsr"  
+orExcelPath="D:\excel.xls"  
+'************************************  
+  
+'Load Object Repository  
+'************************************  
+'Creating Object Repository  utility Object  
+Set srcRepository = CreateObject("Mercury.ObjectRepositoryUtil")  
+  
+'Load Object Repository  
+srcRepository.Load ObjectRepositoryPath  
+'************************************  
+  
+'Create Excel file with columns, colors and Autofit  
+'************************************  
+'Create Excel Object    
+Set excel=createobject("excel.application")     
+  
+'Add New Workbook    
+Set workbooks=excel.Workbooks.Add()  
+  
+excel.Cells(1,1).value="ParentObjectLogicalName"  
+excel.Cells(1,2).value="ParentObjectProperties"  
+excel.Cells(1,3).value="ObjectLogicalName"  
+excel.Cells(1,4).value="ObjectProperties"  
+  
+Set objRange = Excel.Range("A1:D1")  
+  
+objRange.Font.Bold = True  
+objRange.Font.ColorIndex = 1  
+objRange.Interior.ColorIndex=15  
+  
+' rIndex variable used to enter values row by row  
+rIndex=2   
+'************************************  
+  
+'fnExportORtoExcel will get objects and properties from OR  
+'************************************  
+'Calling a fnExportORtoExcel Function  
+fnExportORtoExcel ParentObject  
+'************************************  
+  
+'Auto Fit all other columns & save excel  
+'************************************  
+'Autofit all columns  
+excel.Worksheets("Sheet1").UsedRange.Columns.AutoFit  
+  
+With excel.Worksheets("Sheet1").UsedRange.Borders  
+        .LineStyle = 1  
+        .Color = vbblack  
+        .Weight = 2  
+End With  
+      
+'Save Work Book    
+workbooks.saveas orExcelPath,true   
+  
+'Close Work Book    
+workbooks.Close    
+    
+'Quit from Excel Application    
+excel.Quit    
+'************************************  
+  
+'Release Variables    
+'************************************  
+Set workbooks=Nothing    
+Set excel=Nothing    
+Set srcRepository=Nothing  
+'************************************  
+msgbox "Exporting Completed. Open "&orExcelPath&" to view the Excel Object Repository"  
+  
+'************************************  
+  
+Function fnExportORtoExcel(ParentObject)  
+  
+'Get Objects by parent From loaded Repository  
+'If parent not specified all objects in OR will be captured  
+  
+Set fTOCollection = srcRepository.GetChildren(ParentObject)  
+  
+    For RepObjIndex = 0 To fTOCollection.Count - 1  
+  
+        'Get object by index  
+        Set fTestObject = fTOCollection.Item(RepObjIndex)  
+  
+  Props=""  
+    
+            'Check whether the object is having child objects  
+            If srcRepository.GetChildren (fTestObject).count<>0 then  
+  
+  
+                    'Get TO Properties List  
+                    Set PropertiesColl=fTestObject.GetTOProperties  
+         
+                    For pIndex=0 to PropertiesColl.count-1  
+           'Store properties in a variable with a comma delimiter  
+                                Set ObjectProperty=PropertiesColl.Item(pIndex)  
+                                Props=Props&","&ObjectProperty.name&":="&ObjectProperty.value  
+                                  
+                    Next  
+      
+    If InStr(1,Props,",")=1 Then  
+     Props=Mid(Props,2)  
+    End If  
+      
+      
+                'Write Logical name and Properties in Excel Sheet  
+    excel.Cells(rIndex,1).value=srcRepository.GetLogicalName(fTestObject)  
+    excel.Cells(rIndex,2).value=Props  
+      
+    'Color the cells based class name  
+    If InStr(LCase(Props),"micclass:=browser")<>0 Then  
+     Set objRange = Excel.Range("A"&rIndex&":B"&rIndex)       
+     objRange.Font.Bold = True  
+     objRange.Font.ColorIndex = 1  
+     objRange.Interior.ColorIndex=36   
+       
+    ElseIf InStr(LCase(Props),"micclass:=page")<>0 Then  
+     Set objRange = Excel.Range("A"&rIndex&":B"&rIndex)       
+     objRange.Font.Bold = True  
+     objRange.Font.ColorIndex = 1  
+     objRange.Interior.ColorIndex=35  
+  
+    ElseIf InStr(LCase(Props),"micclass:=frame")<>0 Then  
+     Set objRange = Excel.Range("A"&rIndex&":B"&rIndex)       
+     objRange.Font.Bold = True  
+     objRange.Font.ColorIndex = 1  
+     objRange.Interior.ColorIndex=40  
+    End If      
+  
+    'increase rIndex to enter data in next lines of excel  
+    rIndex=rIndex+1  
+      
+    'Calling Recursive Function  
+                fnExportORtoExcel fTestObject  
+  
+            else  
+              'This else block will execute when the object is not having any childs  
+  
+     'Get TO Properties List  
+                    Set PropertiesColl=fTestObject.GetTOProperties  
+                    For pIndex=0 to PropertiesColl.count-1  
+                       'Store properties in a variable with a comma delimiter  
+                                Set ObjectProperty=PropertiesColl.item(pIndex)  
+                                Props=Props&","&ObjectProperty.name&":="&ObjectProperty.value  
+                    Next  
+                  
+    If InStr(1,Props,",")=1 Then  
+     Props=Mid(Props,2)  
+    End If  
+      
+                'Write Logical name and Properties in Excel Sheet  
+    excel.Cells(rIndex,3).value=srcRepository.GetLogicalName(fTestObject)  
+    excel.Cells(rIndex,4).value=Props  
+      
+    'increase rIndex to enter data in next lines of excel  
+    rIndex=rIndex+1  
+            End if  
+    Next  
+  
+End Function  
+  
+'************************************  

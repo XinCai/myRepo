@@ -1,0 +1,29 @@
+'VB Script Document
+'================================================================
+'Description
+' Converts the specified object repository file (version 8.2.1 or earlier) to the current format. 
+' Important Information
+' You must convert object repository files from QuickTest Professional 8.2.1 or earlier to the current format before you can use them in QuickTest Professional 9.0 or later.
+' Note: You do not need to use the Load method to load the object repository before converting it.
+'
+'Syntax
+' object.Convert (OldFile, NewFile)
+'
+' Argument Description 
+' object     --- An expression evaluating to an object of type ObjectRepositoryUtil. 
+' OldFile    --- Required. A String value. The full name and path of the object repository you want to convert to the current format.  
+' newFile    --- Required. A String value. The full name and path under which you want to save the converted object repository. The file must be a new file (one that does not already exist). 
+'                The folder path must be an existing one. 
+'
+' Return Type
+'             A Variant value.  The full name of the converted object repository.
+'========================================================
+option explicit
+Dim objORUtil, objCollection, objCol, i, objToCol
+' AOM to Open an OR file and  get the Object Properties
+Set objORUtil = CreateObject("Mercury.ObjectRepositoryUtil")
+objORUtil.ExportToXML "D:\_devl\BAU\test-automation-bau\AutomationFramework\Temp\BitMapVSPageCheck\Action1\ObjectRepository.bdb", "D:\sample.xml"
+
+Set objToCol = Nothing
+Set objCollection = Nothing
+Set objORUtil = Nothing

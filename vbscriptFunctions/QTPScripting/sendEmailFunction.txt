@@ -1,0 +1,43 @@
+'**********************************************
+'Function: Sendmail_fromQTP
+'Arguments:
+                   'sMailto:Recipient email address
+
+                   'sSubject:Mail subject
+
+                   'sBody:Mail body text
+
+                   'sAttachment: Attachment file path
+
+'Description:Send mail using Outlook express
+'Author:QTP Lab:--A touch of madness
+'Website:http://automationlab09.wordpress.com
+'Last modified:19/07/2010
+
+'*********************************************
+
+Function Sendmail_fromQTP(sMailto,ccMailTo,sSubject,sBody,sAttachment)
+
+set oMailobj=CreateObject("Outlook.Application")
+
+set oSendmail=oMailobj.CreateItem(0)
+      oSendmail.To=sMailto
+      oSendmail.CC = ccMailTo
+      oSendmail.Subject=sSubject
+      oSendmail.Body=sBody
+      If (sAttachment <> "") Then
+         oSendmail.Attachments.Add(sAttachment)
+      Else
+           Reporter.ReportEvent micInfo,"Sending mail:","Unable to send attachment,please verify your attachment file"
+
+       End If 
+
+       oSendmail.Send
+
+set oSendmail=Nothing
+set oMailobj=Nothing
+
+End Function
+
+'Usage:
+ Sendmail_fromQTP "Cai.kevin@abc.net.au","caixin@hotmail.com","Mail from QTP","Your mail descrn goes here..","C:\Users\caik5x\Desktop\vbscripts\QTP_AutomationObjectModel\sendEmailFunction.txt"
