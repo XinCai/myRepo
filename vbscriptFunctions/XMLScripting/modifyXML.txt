@@ -1,0 +1,13 @@
+Set xmlDoc = CreateObject("Microsoft.XMLDOM")
+
+xmlDoc.Async = "False" ' make sure fully load xml document before go ahead 
+xmlDoc.Load("C:\Temp\Audits.xml")
+
+' selectNodes returns a collection of all the XML records that meet the specified criteria. 
+Set colNodes=xmlDoc.selectNodes ("/ITChecklist/ComputerAudit " & "[ComputerName = 'atl-ws-100']/AuditDate")
+
+For Each objNode in colNodes
+   objNode.Text = Date
+Next
+  
+xmlDoc.Save "C:\Temp\Audits.xml"  

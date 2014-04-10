@@ -1,0 +1,22 @@
+Set xmlDoc = CreateObject("Microsoft.XMLDOM")  
+  
+Set objRoot = xmlDoc.createElement("ITChecklist") ' use createElement method to generate xml element
+xmlDoc.appendChild objRoot  ' create root element 
+
+Set objRecord = xmlDoc.createElement("ComputerAudit") 
+objRoot.appendChild objRecord ' add sub element to root element 
+  
+Set objName = xmlDoc.createElement("ComputerName")
+objName.Text = "atl-ws-001"
+objRecord.appendChild objName  
+
+Set objDate = xmlDoc.createElement("AuditDate")  
+objDate.Text = Date  
+objRecord.appendChild objDate  
+
+'That simply inserts the <?xml version="1.0" ?> tag at the beginning of the file, 
+'ensuring that we have a well-formed XML document.
+
+Set objIntro = xmlDoc.createProcessingInstruction("xml","version='1.0'")  
+xmlDoc.insertBefore objIntro, xmlDoc.childNodes(0)  
+xmlDoc.Save "C:\Temp\Audits.xml"  

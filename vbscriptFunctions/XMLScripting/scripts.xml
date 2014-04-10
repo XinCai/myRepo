@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<Repository>
+  <Script>
+    <Category>Microsoft Office</Category>
+    <Subcategory>Microsoft Access</Subcategory>
+    <Keyword>databases</Keyword>
+    <Title>How Can I Print a Microsoft Access Report?</Title>
+    <URL>http://www.microsoft.com/technet/scriptcenter/resources/qanda/oct06/hey1020.mspx</URL>
+  </Script>
+  <Script>
+    <Category>Microsoft Office</Category>
+    <Subcategory>Microsoft Access</Subcategory>
+    <Keyword>databases</Keyword>
+    <Title>How Can I Compact a Microsoft Access Database?</Title>
+    <URL>http://www.microsoft.com/technet/scriptcenter/resources/qanda/oct06/hey1009.mspx</URL>
+  </Script>
+  <Script>
+    <Category>Microsoft Office</Category>
+    <Subcategory>Microsoft Word</Subcategory>
+    <Keyword>hyperlinks</Keyword>
+    <Title>How Can I Change an Existing Hyperlink in a Microsoft Word Document?</Title>
+    <URL>http://www.microsoft.com/technet/scriptcenter/resources/qanda/oct06/hey1016.mspx</URL>
+  </Script>
+  <Script>
+    <Category>Enterprise Servers</Category>
+    <Subcategory>Microsoft SQL Server</Subcategory>
+    <Keyword>databases</Keyword>
+    <Title>How Can I Create a Table in a SQL Server Database?</Title>
+    <URL>http://www.microsoft.com/technet/scriptcenter/resources/qanda/oct06/hey1016.mspx</URL>
+  </Script>
+</Repository>

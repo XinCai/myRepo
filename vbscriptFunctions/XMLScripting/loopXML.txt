@@ -1,0 +1,11 @@
+
+Set xmlDoc = CreateObject("Microsoft.XMLDOM")
+xmlDoc.Async = "False" ' load 
+xmlDoc.Load("C:\developement\myRepo\vbscriptFunctions\XMLScripting\Scripts.xml")
+
+Set colNodes = xmlDoc.selectNodes("/Repository/Script/*")
+'Set colNodes=xmlDoc.selectNodes("/Repository/Script/Title")  ' return Title element
+'Set colNodes=xmlDoc.selectNodes("/Repository/Script/(Title | URL)") ' return Title and URL element
+For Each objNode in colNodes
+   Wscript.Echo objNode.Text
+Next

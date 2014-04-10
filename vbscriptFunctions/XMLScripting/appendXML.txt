@@ -1,0 +1,21 @@
+Set xmlDoc = CreateObject("Microsoft.XMLDOM")
+
+'Async property to False, 
+'which tells the script that we want to load the document synchronously rather than asynchronously.
+xmlDoc.Async = "False" ' make sure load xml file fully, before script go ahead 
+xmlDoc.Load("C:\Temp\Audits.xml")
+
+Set objRoot = xmlDoc.documentElement
+  
+Set objRecord = xmlDoc.createElement("ComputerAudit")
+objRoot.appendChild objRecord
+
+Set objFieldValue = xmlDoc.createElement("ComputerName")
+objFieldValue.Text = "atl-ws-100"
+objRecord.appendChild objFieldValue
+
+Set objFieldValue = xmlDoc.createElement("AuditDate")
+objFieldValue.Text = Date
+objRecord.appendChild objFieldValue
+
+xmlDoc.Save "C:\Temp\Audits.xml"  
