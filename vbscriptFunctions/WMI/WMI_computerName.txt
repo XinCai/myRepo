@@ -1,0 +1,10 @@
+' get my computer name 
+strComputer = "."  
+
+Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\cimv2")  
+
+Set colComputers = objWMIService.ExecQuery("Select * from Win32_ComputerSystem")  
+
+For Each objComputer in colComputers  
+	Wscript.Echo objComputer.Name 
+Next  
