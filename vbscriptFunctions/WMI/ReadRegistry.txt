@@ -1,0 +1,12 @@
+=========================='============================================================================
+'The WshShell object is often used to read the local registry. To read or manipulate a remote registry,
+'you must use Windows Management Instrumentation (WMI.) Assuming the user executing
+'the script has the appropriate permissions, you can easily read and write information
+'from the registry. Here is a quick example of reading owner and product information from the
+'local registry.
+'=====================================================================================================
+dim objShell
+Set objShell=CreateObject("wscript.shell")
+strRegisteredUser=objShell.RegRead("HKLM\Software\Microsoft\" &"Windows NT\CurrentVersion\RegisteredOwner")
+strProduct=objShell.RegRead("HKLM\Software\Microsoft\Windows NT\" &"CurrentVersion\ProductName")
+Msgbox strRegisteredUser & " is running " & strProduct

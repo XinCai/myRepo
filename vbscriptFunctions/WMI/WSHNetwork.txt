@@ -1,0 +1,50 @@
+dim objShell,objNetwork,collDrives
+set objShell=CreateObject("Wscript.shell")
+Set objNetwork=CreateObject("WScript.Network")
+'title for popup window
+strTitle="Welcome"
+'enumerate mapped drives
+strMappedDrives=EnumNetwork()
+'enumerate mapped printers
+strMappedPrint=EnumPrint()
+'compose popup message text
+strMsg=objNetwork.UserName & ", thank you for logging in to " &_
+objNetwork.ComputerName & VbCrLf & vbcrlf
+strMsg=strMsg & strMappedDrives & VbCrLf & VbCrLf
+strMsg=strMsg & strMappedPrint & VbCrLf & VbCrLf
+strMsg=strMsg & "It is now " & Now & VbCrLf
+strMsg=strMsg & "Have a nice day."
+'set time to -1 to never dismiss popup window
+objShell.Popup strMsg,10,strTitle,vbOKOnly+vbInformation
+WScript.quit
+Function EnumNetwork()
+On Error Resume Next
+Set colDrives = objNetwork.EnumNetworkDrives
+'If no network drives were enumerated, then inform user, else display
+'enumerated drives
+If colDrives.Count = 0 Then
+ret="There are no network drives to enumerate."
+Else
+ret = "Current network drive connections: " & vbCRLF
+For i = 0 To colDrives.Count - 1 Step 2
+ret = ret & VbCrLf & colDrives(i) & vbTab & colDrives(i + 1)
+Next
+End If
+EnumNetwork=ret
+End Function
+Function EnumPrint()
+On Error Resume Next
+Set colPrint = objNetwork.EnumPrinterConnections
+
+'If no network printers enumerated, then inform user, else display
+'enumerated printers
+If colPrint.Count = 0 Then
+ret="There are no printers to enumerate."
+Else
+ret = "Current Printer connections: " & vbCRLF
+For i = 0 To colPrint.Count - 1 Step 2
+ret = ret & vbCRLF & colPrint(i) & vbTab & colPrint(i + 1)
+Next
+End If
+EnumPrint=ret
+End Function
