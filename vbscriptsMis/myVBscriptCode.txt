@@ -1,0 +1,68 @@
+Set dtmConvertedDate = CreateObject("WbemScripting.SWbemDateTime")
+strComputer = "."
+Set objWMIService = GetObject("winmgmts:{impersonationLevel=impersonate}!\\" & strComputer & "\root\cimv2")
+Set oss = objWMIService.ExecQuery ("Select * from Win32_OperatingSystem")
+
+For Each os in oss
+    'Wscript.Echo "Boot Device: " & os.BootDevice
+    'Wscript.Echo "Build Number: " & os.BuildNumber
+    'Wscript.Echo "Build Type: " & os.BuildType
+    Wscript.Echo "Caption: " & os.Caption
+    'Wscript.Echo "Code Set: " & os.CodeSet
+    'Wscript.Echo "Country Code: " & os.CountryCode
+    'Wscript.Echo "Debug: " & os.Debug
+    'Wscript.Echo "Encryption Level: " & os.EncryptionLevel
+    dtmConvertedDate.Value = os.InstallDate
+    dtmInstallDate = dtmConvertedDate.GetVarDate
+    Wscript.Echo "Install Date: " & dtmInstallDate 
+    Wscript.Echo "Licensed Users: " & os.NumberOfLicensedUsers
+    Wscript.Echo "Organization: " & os.Organization
+    Wscript.Echo "OS Language: " & os.OSLanguage
+    Wscript.Echo "OS Product Suite: " & os.OSProductSuite
+    Wscript.Echo "OS Type: " & os.OSType
+    Wscript.Echo "Primary: " & os.Primary
+    Wscript.Echo "Registered User: " & os.RegisteredUser
+    Wscript.Echo "Serial Number: " & os.SerialNumber
+    Wscript.Echo "Version: " & os.Version
+Next
+
+'=======================================================================
+
+'delete files in temp/testing folder
+Set obj = CreateObject("Scripting.FileSystemObject") 'Calls the File System Object
+
+obj.DeleteFile("C:\Game\*.txt") 'Deletes the file throught the DeleteFile function
+'=======================================================================
+
+Option Explicit
+Dim se, fso
+Dim argv, file, str
+'VBScript Encoder
+'Author: Demon
+'Website: http://demon.tw
+Set se  = CreateObject("Scripting.Encoder")
+Set fso = CreateObject("Scripting.FilesystemObject")
+'For Each argv In WScript.Arguments
+argv = "C:\Temp\vbscripts\getOSversion.vbs"
+    Set file = fso.OpenTextFile(argv)
+    str = file.ReadAll
+    file.Close
+    str = se.EncodeScriptFile(".vbs", str, 0 , "")
+    argv = Left(argv, Len(argv)-3) & ".vbe"
+    Set file = fso.OpenTextFile(argv, 2, True)
+    file.Write str
+    file.Close
+'Next
+MsgBox "OK", vbInformation
+
+'=======================================================================
+Set shell=CreateObject("wscript.shell")
+shell.Run("Notepad.exe")
+'=======================================================================
+
+Set wshShell =wscript.CreateObject("WScript.Shell") 
+'do 
+wscript.sleep 100 
+wshshell.sendkeys "%{F4}" 
+'loop
+'============================================================

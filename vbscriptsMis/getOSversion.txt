@@ -1,0 +1,22 @@
+Option Explicit ' Enforce variable declaration
+    ' Declare objects
+Dim oShell
+Dim sOSVersion
+Dim lOfficeVersion
+
+Set oShell = CreateObject("WScript.Shell")
+
+On Error Resume Next
+sOSVersion = oShell.RegRead("HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProductName")' Read the registry for the operating system version
+
+lOfficeVersion = GetOfficeVersionNumber() ' Read the office version from the function
+
+MsgBox "sOSVersion = " & sOSVersion & vbCrLf & "lOfficeVersion = " & lOfficeVersion
+
+    Function GetOfficeVersionNumber()
+        GetOfficeVersionNumber = ""  ' or you could use "Office not installed"
+        Dim sTempValue
+                    ' Read the Classes Root registry hive (it is a memory-only instance amalgamation of HKCU\Software\Classes and HKLM\Software\Classes registry keys) as it contains a source of information for the currently active Microsoft Office Excel application major version - it's quicker and easier to read the registry than the file version information after a location lookup). The trailing backslash on the line denotes that the @ or default registry key value is being queried.
+        sTempValue = oShell.RegRead("HKCR\Excel.Application\CurVer\")
+        If Len(sTempValue) > 2 Then GetOfficeVersionNumber = Replace(Right(sTempValue, 2), ".", "") ' Check the length of the value found and if greater than 2 digits then read the last two digits for the major Office version value
+    End Function    ' GetOfficeVersionNumber
